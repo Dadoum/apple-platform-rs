@@ -135,6 +135,11 @@ impl DirectoryBundle {
             .into_dictionary()
             .ok_or_else(|| anyhow!("{} is not a dictionary", info_plist_path.display()))?;
 
+        if info_plist.get("CFBundlePackageType") == None &&
+            info_plist.get("CFBundleIdentifier") == None {
+            return Err(anyhow!("No CFBundleIdentifier, this is not a bundle"));
+        }
+
         Ok(Self {
             root: directory.to_path_buf(),
             root_name,
